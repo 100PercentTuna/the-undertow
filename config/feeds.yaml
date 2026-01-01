@@ -1,0 +1,278 @@
+# RSS Feed Configuration for The Undertow
+# Each zone can have multiple sources
+# Priority: 1 = highest, 5 = lowest
+
+# TODO: Replace placeholder URLs with actual feed URLs
+# See input_needed.md for required information
+
+zones:
+  # EUROPE
+  western_europe:
+    name: "Western Europe (Core EU)"
+    feeds:
+      - name: "Financial Times World"
+        url: "https://www.ft.com/world?format=rss"
+        priority: 1
+        language: en
+      # Add more feeds here
+
+  southern_europe:
+    name: "Southern Europe (Mediterranean EU)"
+    feeds: []
+
+  nordic_baltic:
+    name: "Nordic-Baltic Region"
+    feeds: []
+
+  british_isles:
+    name: "British Isles"
+    feeds:
+      - name: "The Guardian World"
+        url: "https://www.theguardian.com/world/rss"
+        priority: 2
+        language: en
+
+  central_europe:
+    name: "Central Europe (Visegrád+)"
+    feeds: []
+
+  western_balkans:
+    name: "Western Balkans"
+    feeds:
+      - name: "Balkan Insight"
+        url: "https://balkaninsight.com/feed/"
+        priority: 1
+        language: en
+
+  eastern_europe:
+    name: "Eastern Europe (Non-EU)"
+    feeds:
+      - name: "Kyiv Independent"
+        url: "https://kyivindependent.com/feed/"
+        priority: 1
+        language: en
+
+  south_caucasus:
+    name: "South Caucasus"
+    feeds:
+      - name: "OC Media"
+        url: "https://oc-media.org/feed/"
+        priority: 1
+        language: en
+
+  # RUSSIA & EURASIA
+  russia_core:
+    name: "Russian Federation"
+    feeds:
+      - name: "Meduza"
+        url: "https://meduza.io/rss/en/all"
+        priority: 1
+        language: en
+
+  central_asia_west:
+    name: "Central Asia (Western)"
+    feeds:
+      - name: "Eurasianet"
+        url: "https://eurasianet.org/feed"
+        priority: 1
+        language: en
+
+  central_asia_east:
+    name: "Central Asia (Eastern)"
+    feeds: []
+
+  # MIDDLE EAST & NORTH AFRICA
+  levant:
+    name: "Levant"
+    feeds:
+      - name: "Al-Monitor"
+        url: "https://www.al-monitor.com/rss"
+        priority: 1
+        language: en
+
+  gulf_gcc:
+    name: "Gulf Cooperation Council"
+    feeds: []
+
+  iraq:
+    name: "Iraq"
+    feeds: []
+
+  iran:
+    name: "Iran"
+    feeds: []
+
+  turkey:
+    name: "Turkey"
+    feeds: []
+
+  maghreb:
+    name: "Maghreb"
+    feeds: []
+
+  egypt:
+    name: "Egypt"
+    feeds: []
+
+  # SUB-SAHARAN AFRICA
+  horn_of_africa:
+    name: "Horn of Africa"
+    feeds:
+      - name: "Addis Standard"
+        url: "https://addisstandard.com/feed/"
+        priority: 1
+        language: en
+
+  east_africa:
+    name: "East Africa"
+    feeds: []
+
+  great_lakes:
+    name: "Great Lakes & Central Africa"
+    feeds: []
+
+  sahel:
+    name: "Sahel"
+    feeds: []
+
+  west_africa:
+    name: "West Africa (Coastal)"
+    feeds: []
+
+  southern_africa:
+    name: "Southern Africa"
+    feeds:
+      - name: "Daily Maverick"
+        url: "https://www.dailymaverick.co.za/feed/"
+        priority: 1
+        language: en
+
+  # SOUTH ASIA
+  india:
+    name: "India"
+    feeds:
+      - name: "The Hindu"
+        url: "https://www.thehindu.com/news/international/feeder/default.rss"
+        priority: 2
+        language: en
+
+  pakistan_afghanistan:
+    name: "Pakistan & Afghanistan"
+    feeds:
+      - name: "Dawn"
+        url: "https://www.dawn.com/feeds/home"
+        priority: 1
+        language: en
+
+  south_asia_periphery:
+    name: "South Asian Periphery"
+    feeds: []
+
+  # EAST ASIA
+  china:
+    name: "China"
+    feeds:
+      - name: "South China Morning Post"
+        url: "https://www.scmp.com/rss/91/feed"
+        priority: 1
+        language: en
+
+  taiwan:
+    name: "Taiwan"
+    feeds: []
+
+  korea:
+    name: "Korean Peninsula"
+    feeds:
+      - name: "NK News"
+        url: "https://www.nknews.org/feed/"
+        priority: 1
+        language: en
+
+  japan:
+    name: "Japan"
+    feeds:
+      - name: "Nikkei Asia"
+        url: "https://asia.nikkei.com/rss/feed/nar"
+        priority: 1
+        language: en
+
+  mongolia:
+    name: "Mongolia"
+    feeds: []
+
+  # SOUTHEAST ASIA
+  mainland_sea:
+    name: "Mainland Southeast Asia"
+    feeds:
+      - name: "Frontier Myanmar"
+        url: "https://www.frontiermyanmar.net/feed/"
+        priority: 1
+        language: en
+
+  maritime_sea:
+    name: "Maritime Southeast Asia"
+    feeds: []
+
+  # OCEANIA & PACIFIC
+  australia_nz:
+    name: "Australia & New Zealand"
+    feeds:
+      - name: "The Interpreter (Lowy)"
+        url: "https://www.lowyinstitute.org/the-interpreter/rss.xml"
+        priority: 1
+        language: en
+
+  pacific_islands:
+    name: "Pacific Islands"
+    feeds:
+      - name: "RNZ Pacific"
+        url: "https://www.rnz.co.nz/rss/pacific.xml"
+        priority: 1
+        language: en
+
+  # THE AMERICAS
+  usa:
+    name: "United States"
+    feeds:
+      - name: "Foreign Affairs"
+        url: "https://www.foreignaffairs.com/rss.xml"
+        priority: 1
+        language: en
+
+  canada:
+    name: "Canada"
+    feeds: []
+
+  mexico_central_america:
+    name: "Mexico & Central America"
+    feeds: []
+
+  caribbean:
+    name: "Caribbean"
+    feeds: []
+
+  andean:
+    name: "Andean Region"
+    feeds:
+      - name: "InSight Crime"
+        url: "https://insightcrime.org/feed/"
+        priority: 1
+        language: en
+
+  southern_cone:
+    name: "Southern Cone"
+    feeds: []
+
+# Global sources (not zone-specific)
+global_sources:
+  - name: "Crisis Group"
+    url: "https://www.crisisgroup.org/rss.xml"
+    priority: 1
+    language: en
+    
+  - name: "War on the Rocks"
+    url: "https://warontherocks.com/feed/"
+    priority: 2
+    language: en
+

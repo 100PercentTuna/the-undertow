@@ -1,0 +1,199 @@
+# The Undertow - Git Ignore
+
+# ============================================================
+# Python
+# ============================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+*.manifest
+*.spec
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+.hypothesis/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+cython_debug/
+
+# ============================================================
+# Virtual Environments
+# ============================================================
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# ============================================================
+# Environment Variables & Secrets
+# ============================================================
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+secrets/
+.secrets/
+
+# ============================================================
+# IDE & Editors
+# ============================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+
+# ============================================================
+# Database
+# ============================================================
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+pgdata/
+postgres-data/
+
+# ============================================================
+# Logs
+# ============================================================
+*.log
+logs/
+*.log.*
+log/
+
+# ============================================================
+# Temporary Files
+# ============================================================
+*.tmp
+*.temp
+*.bak
+*.backup
+.cache/
+tmp/
+temp/
+
+# ============================================================
+# OS Files
+# ============================================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ============================================================
+# Project Specific
+# ============================================================
+# Alembic
+alembic/versions/*.pyc
+
+# Local test data
+test_data/
+sample_data/
+
+# Generated files
+*.generated.*
+openapi.json
+openapi.yaml
+
+# ============================================================
+# Frontend (if exists)
+# ============================================================
+node_modules/
+.next/
+out/
+.nuxt/
+dist/
+.cache/
+.parcel-cache/
+.next/
+out/
+build/
+.vercel
+.turbo
+
+# ============================================================
+# Jupyter Notebooks
+# ============================================================
+.ipynb_checkpoints/
+*.ipynb
+
+# ============================================================
+# Docker
+# ============================================================
+.dockerignore
+docker-compose.override.yml
+
+# ============================================================
+# AWS & Cloud
+# ============================================================
+.aws/
+*.pem
+*.key
+terraform.tfstate
+terraform.tfstate.backup
+.terraform/
+
+# ============================================================
+# Celery (if used)
+# ============================================================
+celerybeat-schedule
+celerybeat.pid
+
+# ============================================================
+# Coverage Reports
+# ============================================================
+coverage/
+.coverage.*
+htmlcov/
+.pytest_cache/
+
+# ============================================================
+# Documentation Build
+# ============================================================
+docs/_build/
+site/
+
+# ============================================================
+# Local Development
+# ============================================================
+.local/
+local_settings.py
+local_config.py

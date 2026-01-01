@@ -1,0 +1,307 @@
+"""
+Article preview API routes.
+
+Provides live preview of articles during editing.
+"""
+
+from typing import Any
+from uuid import UUID
+
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel, Field
+
+router = APIRouter(prefix="/preview", tags=["Preview"])
+
+
+class PreviewRequest(BaseModel):
+    """Request for article preview."""
+    
+    headline: str = Field(..., min_length=10, max_length=500)
+    content: str = Field(..., min_length=100)
+    format: str = Field(default="html", description="html, markdown, or text")
+
+
+class PreviewResponse(BaseModel):
+    """Response with rendered preview."""
+    
+    rendered: str
+    word_count: int
+    read_time_minutes: int
+    warnings: list[str]
+
+
+@router.post("/article", response_model=PreviewResponse)
+async def preview_article(request: PreviewRequest) -> PreviewResponse:
+    """
+    Generate a preview of an article.
+    
+    Renders the content in the requested format with style checks.
+    """
+    content = request.content
+    
+    # Calculate metrics
+    words = content.split()
+    word_count = len(words)
+    read_time = max(1, word_count // 200)  # 200 words per minute
+    
+    # Check for style warnings
+    warnings = []
+    
+    # Check for forbidden phrases
+    forbidden = [
+        "in today's interconnected world",
+        "time will tell",
+        "remains to be seen",
+        "violence erupted",
+        "tensions escalated",
+    ]
+    
+    content_lower = content.lower()
+    for phrase in forbidden:
+        if phrase in content_lower:
+            warnings.append(f"Avoid phrase: '{phrase}'")
+    
+    # Check for passive voice indicators
+    passive_indicators = [" was ", " were ", " been ", " being "]
+    passive_count = sum(content_lower.count(p) for p in passive_indicators)
+    if passive_count > word_count // 50:
+        warnings.append(f"High passive voice usage ({passive_count} instances)")
+    
+    # Check sentence length
+    sentences = content.replace("!", ".").replace("?", ".").split(".")
+    long_sentences = [s for s in sentences if len(s.split()) > 40]
+    if long_sentences:
+        warnings.append(f"{len(long_sentences)} sentences exceed 40 words")
+    
+    # Render based on format
+    if request.format == "html":
+        rendered = _render_html(request.headline, content)
+    elif request.format == "markdown":
+        rendered = _render_markdown(request.headline, content)
+    else:
+        rendered = f"# {request.headline}\n\n{content}"
+    
+    return PreviewResponse(
+        rendered=rendered,
+        word_count=word_count,
+        read_time_minutes=read_time,
+        warnings=warnings,
+    )
+
+
+def _render_html(headline: str, content: str) -> str:
+    """Render article as HTML with styling."""
+    # Split into paragraphs
+    paragraphs = content.split("\n\n")
+    
+    html_paragraphs = []
+    for p in paragraphs:
+        p = p.strip()
+        if not p:
+            continue
+        
+        # Check for headers (lines starting with ##)
+        if p.startswith("## "):
+            html_paragraphs.append(f'<h2 class="section-header">{p[3:]}</h2>')
+        elif p.startswith("### "):
+            html_paragraphs.append(f'<h3 class="subsection-header">{p[4:]}</h3>')
+        else:
+            html_paragraphs.append(f'<p>{p}</p>')
+    
+    return f"""
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {{
+            font-family: 'Georgia', serif;
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: #0f172a;
+            color: #e2e8f0;
+            line-height: 1.7;
+        }}
+        h1 {{
+            font-family: 'Inter', sans-serif;
+            color: #f59e0b;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            line-height: 1.3;
+        }}
+        h2 {{
+            font-family: 'Inter', sans-serif;
+            color: #94a3b8;
+            font-size: 1.25rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }}
+        h3 {{
+            font-family: 'Inter', sans-serif;
+            color: #cbd5e1;
+            font-size: 1.1rem;
+            margin-top: 1.5rem;
+        }}
+        p {{
+            margin-bottom: 1.25rem;
+        }}
+        .meta {{
+            color: #64748b;
+            font-size: 0.875rem;
+            margin-bottom: 2rem;
+        }}
+    </style>
+</head>
+<body>
+    <h1>{headline}</h1>
+    <div class="meta">Preview • The Undertow</div>
+    {''.join(html_paragraphs)}
+</body>
+</html>
+"""
+
+
+def _render_markdown(headline: str, content: str) -> str:
+    """Render article as Markdown."""
+    return f"""# {headline}
+
+*Preview • The Undertow*
+
+---
+
+{content}
+
+---
+
+*Generated by The Undertow*
+"""
+
+
+@router.post("/newsletter")
+async def preview_newsletter(
+    article_ids: list[str] = [],
+    preamble: str | None = None,
+) -> dict[str, Any]:
+    """
+    Preview the newsletter with selected articles.
+    """
+    # In production, would fetch actual articles
+    sample_articles = [
+        {
+            "id": "1",
+            "headline": "Israel-Somaliland Recognition Reshapes Red Sea Dynamics",
+            "summary": "Israel's recognition signals strategic shift in Red Sea security architecture.",
+            "zone": "horn_of_africa",
+            "read_time": 8,
+        },
+        {
+            "id": "2",
+            "headline": "Sahel Junta Consolidation Continues Despite Regional Pressure",
+            "summary": "Mali, Niger, and Burkina Faso deepen alliance as ECOWAS options narrow.",
+            "zone": "sahel",
+            "read_time": 6,
+        },
+    ]
+    
+    default_preamble = """
+Today's edition examines two stories that illuminate how middle powers 
+are reshaping their regions outside the traditional great-power framework.
+In the Horn of Africa, Israel's Somaliland recognition creates new 
+possibilities—and complications—for Red Sea security. In the Sahel, 
+the military junta alliance continues to consolidate despite international 
+pressure, with implications for France, Russia, and regional stability.
+"""
+    
+    return {
+        "date": "January 5, 2024",
+        "preamble": preamble or default_preamble.strip(),
+        "articles": sample_articles,
+        "total_read_time": sum(a["read_time"] for a in sample_articles),
+        "html": _render_newsletter_html(
+            preamble or default_preamble.strip(),
+            sample_articles,
+        ),
+    }
+
+
+def _render_newsletter_html(preamble: str, articles: list[dict]) -> str:
+    """Render newsletter as HTML email."""
+    article_html = ""
+    for i, article in enumerate(articles, 1):
+        article_html += f"""
+        <div style="margin-bottom: 30px; padding-bottom: 30px; border-bottom: 1px solid #334155;">
+            <div style="color: #64748b; font-size: 12px; margin-bottom: 8px;">
+                {article['zone'].upper().replace('_', ' ')} • {article['read_time']} MIN READ
+            </div>
+            <h2 style="font-size: 20px; color: #f1f5f9; margin: 0 0 10px;">
+                {article['headline']}
+            </h2>
+            <p style="color: #94a3b8; margin: 0;">
+                {article['summary']}
+            </p>
+        </div>
+        """
+    
+    return f"""
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin: 0; padding: 0; background: #0f172a; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+    <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+        <!-- Header -->
+        <div style="text-align: center; margin-bottom: 40px;">
+            <h1 style="color: #f59e0b; font-size: 28px; margin: 0;">THE UNDERTOW</h1>
+            <p style="color: #64748b; margin: 10px 0 0;">Daily Intelligence Brief</p>
+        </div>
+        
+        <!-- Preamble -->
+        <div style="background: #1e293b; padding: 25px; border-radius: 8px; margin-bottom: 40px;">
+            <p style="color: #e2e8f0; line-height: 1.7; margin: 0;">
+                {preamble}
+            </p>
+        </div>
+        
+        <!-- Articles -->
+        {article_html}
+        
+        <!-- Footer -->
+        <div style="text-align: center; color: #64748b; font-size: 12px; margin-top: 40px;">
+            <p>The Undertow • Intelligence for serious people</p>
+            <p>
+                <a href="#" style="color: #f59e0b;">Unsubscribe</a> • 
+                <a href="#" style="color: #f59e0b;">View in browser</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+"""
+
+
+@router.get("/article/{article_id}")
+async def preview_existing_article(
+    article_id: UUID,
+    format: str = "html",
+) -> dict[str, Any]:
+    """
+    Preview an existing article from the database.
+    """
+    # In production, would fetch from database
+    # For now, return a sample
+    
+    return {
+        "article_id": str(article_id),
+        "headline": "Sample Article",
+        "format": format,
+        "rendered": f"<p>Article {article_id} preview</p>",
+        "word_count": 2500,
+        "read_time_minutes": 12,
+    }
+

@@ -1,0 +1,84 @@
+# Cursor Ignore File
+# Files and directories to exclude from Cursor's context
+
+# Virtual environments
+venv/
+env/
+.venv/
+ENV/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+pgdata/
+
+# Logs
+*.log
+logs/
+log/
+
+# Dependencies
+node_modules/
+.egg-info/
+
+# Build artifacts
+build/
+dist/
+*.egg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test coverage
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Temporary files
+*.tmp
+*.temp
+tmp/
+temp/
+
+# Large documentation files (if needed)
+# Uncomment if context window is an issue
+# SOLUTION_ARCHITECTURE.md
+# THE_UNDERTOW.md
+
+# Git
+.git/
+
+# Docker
+docker-compose.override.yml
+
+# AWS
+.aws/
+*.pem
+*.key
+
+# Frontend build (if exists)
+.next/
+out/
+dist/
+build/
+

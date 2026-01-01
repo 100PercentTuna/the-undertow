@@ -1,0 +1,38 @@
+# The Undertow - Requirements
+# For AWS Lightsail deployment
+
+# Web framework
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+pydantic==2.5.0
+pydantic-settings==2.1.0
+
+# Database
+sqlalchemy[asyncio]==2.0.25
+asyncpg==0.29.0
+alembic==1.13.1
+
+# AI
+anthropic==0.18.1
+openai==1.12.0
+tiktoken==0.5.2
+
+# HTTP & Parsing
+httpx==0.26.0
+feedparser==6.0.10
+beautifulsoup4==4.12.2
+
+# Email
+sendgrid==6.11.0
+
+# Utilities
+structlog==24.1.0
+tenacity==8.2.3
+python-dateutil==2.8.2
+orjson==3.9.10
+click==8.1.7
+rich==13.7.0
+
+# Background tasks (simplified - no Celery needed)
+apscheduler==3.10.4
+
