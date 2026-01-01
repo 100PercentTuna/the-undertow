@@ -10,17 +10,19 @@ This file tracks information needed from the user to complete the implementation
 - [ ] **Anthropic API Key** - Required for Claude models (~$10-15/month)
   - Get from: https://console.anthropic.com
   - Set as `ANTHROPIC_API_KEY` in `.env`
-- [ ] **SendGrid API Key** - Required for newsletter emails (free tier)
-  - Get from: https://sendgrid.com
-  - Set as `SENDGRID_API_KEY` in `.env`
+- [ ] **Gmail App Password** - Required for sending emails (FREE)
+  - Enable 2FA on Gmail: https://myaccount.google.com
+  - Generate App Password: Security → App passwords → Mail → "The Undertow"
+  - Set as `SMTP_PASSWORD` in `.env` (16 characters, no spaces)
 
 ### 2. Newsletter Recipients
 - [ ] **Email addresses** - Who should receive the newsletter?
   - Set as `NEWSLETTER_RECIPIENTS` in `.env` (comma-separated)
 
-### 3. Verified Sender Email
-- [ ] **Your email** - Must be verified in SendGrid
-  - Set as `FROM_EMAIL` in `.env`
+### 3. Gmail Configuration
+- [ ] **Gmail address** - Your Gmail account
+  - Set as `SMTP_USERNAME` and `FROM_EMAIL` in `.env`
+  - Must match the account where you generated the App Password
 
 ---
 

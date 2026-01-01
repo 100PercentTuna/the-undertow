@@ -14,7 +14,7 @@
 
 1. ✅ AWS Account (you have this)
 2. 📝 Anthropic API Key (~$10-15/month)
-3. 📝 SendGrid Account (free)
+3. 📝 Gmail Account (free - for sending emails)
 4. ⏱️ 30 minutes to set up
 
 ---
@@ -29,11 +29,11 @@
 3. Add $15 credit (Settings → Billing)
 4. Save the key (starts with `sk-ant-...`)
 
-**SendGrid** (for email):
-1. Go to [sendgrid.com](https://sendgrid.com)
-2. Sign up (free) → Settings → API Keys → Create
-3. Verify your sender email
-4. Save the key (starts with `SG.`)
+**Gmail** (for email - FREE):
+1. Go to [myaccount.google.com](https://myaccount.google.com)
+2. Enable 2-Factor Authentication (Security → 2-Step Verification)
+3. Generate App Password (Security → App passwords → Mail → "The Undertow")
+4. Save the 16-character password (remove spaces)
 
 ### Step 2: Launch Server (5 min)
 
@@ -65,8 +65,9 @@ pip install -r requirements.txt
 cp env.example .env
 nano .env
 # → Add your ANTHROPIC_API_KEY
-# → Add your SENDGRID_API_KEY  
-# → Add your FROM_EMAIL
+# → Add your SMTP_USERNAME (Gmail address)
+# → Add your SMTP_PASSWORD (16-char App Password)
+# → Add your FROM_EMAIL (same as SMTP_USERNAME)
 # → Add your NEWSLETTER_RECIPIENTS
 # → Save: Ctrl+X, Y, Enter
 
@@ -109,7 +110,7 @@ sudo journalctl -u undertow -f
 |------|---------|
 | AWS Lightsail (Singapore) | $10 |
 | Anthropic API (~$0.30/day) | ~$10 |
-| SendGrid | Free |
+| Gmail SMTP | Free (500 emails/day) |
 | **Total** | **~$20/month** |
 
 ---
@@ -118,8 +119,9 @@ sudo journalctl -u undertow -f
 
 **Newsletter didn't arrive?**
 - Check logs: `sudo journalctl -u undertow -n 50`
-- Verify SendGrid sender email is verified
+- Verify Gmail App Password is correct (no spaces)
 - Check spam folder
+- Verify SMTP_USERNAME matches FROM_EMAIL
 
 **Costs too high?**
 - Check `.env` has `DAILY_BUDGET=1.50`

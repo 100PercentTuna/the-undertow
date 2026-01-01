@@ -101,14 +101,16 @@ async def _send_escalation_email(
     quality_score: float,
     concerns: list[str],
 ) -> None:
-    """Send escalation email notification."""
+    """Send escalation email notification via SMTP."""
     from undertow.config import get_settings
-    import httpx
+    from email.mime.text import MIMEText
+    from email.mime.multipart import MIMEMultipart
+    import aiosmtplib
     
     settings = get_settings()
     
-    if not settings.sendgrid_api_key:
-        logger.warning("sendgrid_not_configured")
+    if not settings.smtp_host:
+        logger.warning("smtp_not_configured")
         return
     
     priority_emoji = {
@@ -162,27 +164,25 @@ async def _send_escalation_email(
     </html>
     """
     
-    async with httpx.AsyncClient() as client:
-        response = await client.post(
-            "https://api.sendgrid.com/v3/mail/send",
-            headers={
-                "Authorization": f"Bearer {settings.sendgrid_api_key}",
-                "Content-Type": "application/json",
-            },
-            json={
-                "personalizations": [
-                    {"to": [{"email": settings.alert_email}]}
-                ],
-                "from": {"email": settings.from_email, "name": "The Undertow"},
-                "subject": f"{priority_emoji} [{priority.upper()}] Escalation: {story_headline[:50]}...",
-                "content": [
-                    {"type": "text/html", "value": html_content}
-                ],
-            },
-        )
-        
-        if response.status_code >= 400:
-            raise Exception(f"SendGrid error: {response.status_code}")
+    # Create message
+    message = MIMEMultipart("alternative")
+    message["Subject"] = f"{priority_emoji} [{priority.upper()}] Escalation: {story_headline[:50]}..."
+    message["From"] = f"The Undertow <{settings.from_email}>"
+    message["To"] = settings.alert_email
+    
+    # Add HTML content
+    html_part = MIMEText(html_content, "html")
+    message.attach(html_part)
+    
+    # Send via SMTP
+    await aiosmtplib.send(
+        message,
+        hostname=settings.smtp_host,
+        port=settings.smtp_port,
+        username=settings.smtp_username,
+        password=settings.smtp_password,
+        use_tls=settings.smtp_use_tls,
+    )
 
 
 @celery_app.task(name="undertow.process_escalation_queue")

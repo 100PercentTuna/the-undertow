@@ -10,7 +10,7 @@ This guide will help you deploy The Undertow on AWS. It will run automatically e
 
 1. **An AWS Account** (you have this ✓)
 2. **An Anthropic API Key** (for AI - costs ~$1/day)
-3. **A SendGrid Account** (free tier - for emails)
+3. **A Gmail Account** (free - for sending emails)
 4. **About 30 minutes** to set everything up
 
 ---
@@ -27,21 +27,25 @@ This guide will help you deploy The Undertow on AWS. It will run automatically e
 6. **Copy the key** (starts with `sk-ant-...`) and save it somewhere safe
 7. Add $10-20 credit to your account (Settings → Billing)
 
-### Step 1.2: Get SendGrid API Key (for emails)
+### Step 1.2: Set Up Gmail for Sending Emails (FREE)
 
-1. Go to [sendgrid.com](https://sendgrid.com)
-2. Click "Start For Free" and create an account
-3. Once logged in, go to Settings → API Keys
-4. Click "Create API Key"
-5. Name it "undertow", select "Full Access"
-6. **Copy the key** (starts with `SG.`) and save it somewhere safe
+**Gmail is completely free and allows 500 emails per day** - more than enough for a daily newsletter.
 
-### Step 1.3: Verify Your Sender Email
+1. **Enable 2-Factor Authentication** (required for App Passwords):
+   - Go to [myaccount.google.com](https://myaccount.google.com)
+   - Click "Security" in the left menu
+   - Under "Signing in to Google", click "2-Step Verification"
+   - Follow the prompts to enable it
 
-1. In SendGrid, go to Settings → Sender Authentication
-2. Click "Verify a Single Sender"
-3. Fill in your email address (this will be the "from" address)
-4. Check your email and click the verification link
+2. **Generate an App Password**:
+   - Still in Security settings, scroll down to "App passwords"
+   - Click "App passwords"
+   - Select "Mail" and "Other (Custom name)"
+   - Type "The Undertow" and click "Generate"
+   - **Copy the 16-character password** (looks like: `abcd efgh ijkl mnop`)
+   - Save this password - you'll use it in the `.env` file
+
+3. **Note your Gmail address** - this will be your `FROM_EMAIL` and `SMTP_USERNAME`
 
 ---
 
@@ -114,9 +118,13 @@ Paste this (replace the values in CAPS with your actual keys):
 # AI Provider
 ANTHROPIC_API_KEY=YOUR_ANTHROPIC_KEY_HERE
 
-# Email
-SENDGRID_API_KEY=YOUR_SENDGRID_KEY_HERE
-FROM_EMAIL=your-verified-email@example.com
+# Email (Gmail SMTP - FREE)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USERNAME=your-email@gmail.com
+SMTP_PASSWORD=your-16-char-app-password
+SMTP_USE_TLS=true
+FROM_EMAIL=your-email@gmail.com
 NEWSLETTER_RECIPIENTS=recipient1@email.com,recipient2@email.com
 
 # Database (don't change these)
@@ -130,6 +138,11 @@ PIPELINE_START_MINUTE=30
 # Cost limit ($1/day)
 DAILY_BUDGET=1.00
 ```
+
+**Important**: 
+- `SMTP_USERNAME` = Your Gmail address
+- `SMTP_PASSWORD` = The 16-character App Password you generated (remove spaces)
+- `FROM_EMAIL` = Same as `SMTP_USERNAME`
 
 Save the file: Press `Ctrl+X`, then `Y`, then `Enter`
 

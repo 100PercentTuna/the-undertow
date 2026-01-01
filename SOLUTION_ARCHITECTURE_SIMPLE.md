@@ -33,7 +33,7 @@ A fully automated geopolitical intelligence system that produces a daily newslet
 │  ┌─────────────────────────────────────────────────────┐   │
 │  │              External Services                        │   │
 │  │  • Anthropic API (Claude Haiku) - ~$0.90/day         │   │
-│  │  • SendGrid (email) - Free tier                      │   │
+│  │  • Gmail SMTP (email) - Free (500/day)               │   │
 │  └─────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -109,7 +109,7 @@ With some buffer for retries and variations:
 |------|---------|
 | AWS Lightsail | $10 |
 | Anthropic/OpenAI | $10-15 |
-| SendGrid | Free |
+| Gmail SMTP | Free (500/day) |
 | **Total** | **~$20-25/month** |
 
 ---
@@ -150,8 +150,8 @@ For each story:
 - Cost: ~$0.01
 
 ### Stage 4: Send (~1 min)
-- Send via SendGrid
-- Cost: Free
+- Send via Gmail SMTP
+- Cost: Free (500 emails/day limit)
 
 **Total: ~50 minutes, ~$0.20-0.40**
 

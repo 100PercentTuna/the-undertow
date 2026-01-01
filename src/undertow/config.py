@@ -113,20 +113,42 @@ class Settings(BaseSettings):
     )
 
     # =========================================================================
-    # Email & Notifications
+    # Email & Notifications (SMTP - Gmail or any SMTP server)
     # =========================================================================
-    sendgrid_api_key: str = Field(default="", description="SendGrid API key")
+    # SMTP Configuration (for Gmail: smtp.gmail.com, port 587)
+    smtp_host: str = Field(
+        default="smtp.gmail.com",
+        description="SMTP server hostname",
+    )
+    smtp_port: int = Field(
+        default=587,
+        ge=1,
+        le=65535,
+        description="SMTP server port (587 for TLS, 465 for SSL)",
+    )
+    smtp_username: str = Field(
+        default="",
+        description="SMTP username (your Gmail address)",
+    )
+    smtp_password: str = Field(
+        default="",
+        description="SMTP password (Gmail App Password, not regular password)",
+    )
+    smtp_use_tls: bool = Field(
+        default=True,
+        description="Use TLS encryption (True for port 587, False for port 465 with SSL)",
+    )
     from_email: str = Field(
-        default="newsletter@theundertow.com",
-        description="From email address",
+        default="",
+        description="From email address (must match SMTP username for Gmail)",
     )
     alert_email: str = Field(
-        default="alerts@theundertow.com",
+        default="",
         description="Email for system alerts",
     )
     slack_webhook_url: str = Field(
         default="",
-        description="Slack webhook URL for notifications",
+        description="Slack webhook URL for notifications (optional)",
     )
     app_url: str = Field(
         default="http://localhost:3000",

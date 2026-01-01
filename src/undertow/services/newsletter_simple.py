@@ -1,14 +1,16 @@
 """
 Simple newsletter service for The Undertow.
 
-Sends daily newsletter via SendGrid.
+Sends daily newsletter via SMTP (Gmail or any SMTP server).
 """
 
 import structlog
 from datetime import datetime
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from typing import Any
 
-import httpx
+import aiosmtplib
 
 from undertow.config import get_settings
 from undertow.schemas.articles import Article
@@ -20,7 +22,8 @@ class NewsletterService:
     """
     Simple newsletter service.
     
-    Sends HTML emails via SendGrid.
+    Sends HTML emails via SMTP (Gmail or any SMTP server).
+    Free to use with Gmail (500 emails/day limit).
     """
     
     def __init__(self) -> None:
@@ -45,8 +48,8 @@ class NewsletterService:
             logger.warning("no_recipients_configured")
             return False
         
-        if not self._settings.sendgrid_api_key:
-            logger.error("sendgrid_not_configured")
+        if not self._settings.smtp_host:
+            logger.error("smtp_not_configured")
             return False
         
         # Build newsletter HTML
@@ -83,30 +86,30 @@ class NewsletterService:
         html_content: str,
         text_content: str,
     ) -> None:
-        """Send a single email via SendGrid."""
-        async with httpx.AsyncClient() as client:
-            response = await client.post(
-                "https://api.sendgrid.com/v3/mail/send",
-                headers={
-                    "Authorization": f"Bearer {self._settings.sendgrid_api_key}",
-                    "Content-Type": "application/json",
-                },
-                json={
-                    "personalizations": [{"to": [{"email": to_email}]}],
-                    "from": {
-                        "email": self._settings.from_email,
-                        "name": "The Undertow",
-                    },
-                    "subject": subject,
-                    "content": [
-                        {"type": "text/plain", "value": text_content},
-                        {"type": "text/html", "value": html_content},
-                    ],
-                },
-            )
-            
-            if response.status_code >= 400:
-                raise Exception(f"SendGrid error: {response.status_code}")
+        """Send a single email via SMTP."""
+        # Create message
+        message = MIMEMultipart("alternative")
+        message["Subject"] = subject
+        message["From"] = f"The Undertow <{self._settings.from_email}>"
+        message["To"] = to_email
+        
+        # Add both plain text and HTML parts
+        text_part = MIMEText(text_content, "plain")
+        html_part = MIMEText(html_content, "html")
+        
+        message.attach(text_part)
+        message.attach(html_part)
+        
+        # Send via SMTP
+        await aiosmtplib.send(
+            message,
+            hostname=self._settings.smtp_host,
+            port=self._settings.smtp_port,
+            username=self._settings.smtp_username,
+            password=self._settings.smtp_password,
+            use_tls=self._settings.smtp_use_tls,
+            start_tls=not self._settings.smtp_use_tls,  # Use STARTTLS if not using TLS
+        )
     
     def _get_subject(self) -> str:
         """Generate email subject."""

@@ -25,7 +25,7 @@ Every day at **4:30 AM Singapore Time**, The Undertow:
 |------|---------|
 | AWS Lightsail (Singapore) | $10 |
 | Anthropic API (~$0.30/day) | ~$10 |
-| SendGrid (email) | Free |
+| Gmail SMTP (email) | Free (500/day limit) |
 | **Total** | **~$20/month** |
 
 ---
@@ -36,7 +36,7 @@ Every day at **4:30 AM Singapore Time**, The Undertow:
 
 - AWS Account
 - Anthropic API Key ([get one here](https://console.anthropic.com))
-- SendGrid Account ([free signup](https://sendgrid.com))
+- Gmail Account (free - for sending emails)
 
 ### 5-Minute Setup
 
@@ -112,8 +112,14 @@ Copy `env.example` to `.env` and fill in:
 ```bash
 # Required
 ANTHROPIC_API_KEY=sk-ant-your-key-here
-SENDGRID_API_KEY=SG.your-key-here
-FROM_EMAIL=your-verified-email@domain.com
+
+# Gmail SMTP (FREE - 500 emails/day)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USERNAME=your-email@gmail.com
+SMTP_PASSWORD=your-16-char-app-password
+SMTP_USE_TLS=true
+FROM_EMAIL=your-email@gmail.com
 NEWSLETTER_RECIPIENTS=you@email.com,friend@email.com
 
 # Optional

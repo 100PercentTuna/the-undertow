@@ -114,43 +114,34 @@ class NotificationService:
         return results
     
     async def _send_email(self, notification: Notification) -> bool:
-        """Send email via SendGrid."""
-        if not self._settings.sendgrid_api_key:
-            logger.warning("sendgrid_not_configured")
+        """Send email via SMTP."""
+        if not self._settings.smtp_host:
+            logger.warning("smtp_not_configured")
             return False
         
-        async with httpx.AsyncClient() as client:
-            response = await client.post(
-                "https://api.sendgrid.com/v3/mail/send",
-                headers={
-                    "Authorization": f"Bearer {self._settings.sendgrid_api_key}",
-                    "Content-Type": "application/json",
-                },
-                json={
-                    "personalizations": [
-                        {"to": [{"email": self._settings.alert_email}]}
-                    ],
-                    "from": {
-                        "email": self._settings.from_email,
-                        "name": "The Undertow",
-                    },
-                    "subject": notification.subject,
-                    "content": [
-                        {"type": "text/plain", "value": notification.body}
-                    ],
-                },
+        from email.mime.text import MIMEText
+        import aiosmtplib
+        
+        # Create message
+        message = MIMEText(notification.body, "plain")
+        message["Subject"] = notification.subject
+        message["From"] = f"The Undertow <{self._settings.from_email}>"
+        message["To"] = self._settings.alert_email
+        
+        try:
+            await aiosmtplib.send(
+                message,
+                hostname=self._settings.smtp_host,
+                port=self._settings.smtp_port,
+                username=self._settings.smtp_username,
+                password=self._settings.smtp_password,
+                use_tls=self._settings.smtp_use_tls,
             )
-            
-            if response.status_code >= 400:
-                logger.error(
-                    "sendgrid_error",
-                    status=response.status_code,
-                    body=response.text,
-                )
-                return False
-            
             logger.info("email_sent", subject=notification.subject)
             return True
+        except Exception as e:
+            logger.error("smtp_error", error=str(e))
+            return False
     
     async def _send_slack(self, notification: Notification) -> bool:
         """Send Slack webhook notification."""

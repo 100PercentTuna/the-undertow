@@ -22,8 +22,8 @@ httpx==0.26.0
 feedparser==6.0.10
 beautifulsoup4==4.12.2
 
-# Email
-sendgrid==6.11.0
+# Email (SMTP - free with Gmail)
+aiosmtplib==3.0.1
 
 # Utilities
 structlog==24.1.0

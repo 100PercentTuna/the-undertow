@@ -61,10 +61,13 @@ DEFAULT_FAST_MODEL=claude-3-haiku-20240307
 ## External Services
 
 ```bash
-# Email (SendGrid)
-SENDGRID_API_KEY=SG...
-SENDGRID_FROM_EMAIL=newsletter@theundertow.io
-SENDGRID_FROM_NAME=The Undertow
+# Email (SMTP - Gmail or any SMTP server)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USERNAME=your-email@gmail.com
+SMTP_PASSWORD=your-16-char-app-password
+SMTP_USE_TLS=true
+FROM_EMAIL=your-email@gmail.com
 
 # Monitoring (Sentry)
 SENTRY_DSN=https://...@sentry.io/...
