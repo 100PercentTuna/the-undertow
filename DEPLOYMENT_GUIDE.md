@@ -27,25 +27,42 @@ This guide will help you deploy The Undertow on AWS. It will run automatically e
 6. **Copy the key** (starts with `sk-ant-...`) and save it somewhere safe
 7. Add $10-20 credit to your account (Settings → Billing)
 
-### Step 1.2: Set Up Gmail for Sending Emails (FREE)
+### Step 1.2: Set Up Email Provider (Choose One)
 
-**Gmail is completely free and allows 500 emails per day** - more than enough for a daily newsletter.
+You have three options. **Gmail is recommended** (free, easy setup).
 
-1. **Enable 2-Factor Authentication** (required for App Passwords):
+#### Option A: Gmail (FREE - Recommended)
+
+1. **Enable 2-Factor Authentication**:
    - Go to [myaccount.google.com](https://myaccount.google.com)
-   - Click "Security" in the left menu
-   - Under "Signing in to Google", click "2-Step Verification"
-   - Follow the prompts to enable it
+   - Security → 2-Step Verification → Enable
 
-2. **Generate an App Password**:
-   - Still in Security settings, scroll down to "App passwords"
-   - Click "App passwords"
-   - Select "Mail" and "Other (Custom name)"
-   - Type "The Undertow" and click "Generate"
-   - **Copy the 16-character password** (looks like: `abcd efgh ijkl mnop`)
-   - Save this password - you'll use it in the `.env` file
+2. **Generate App Password**:
+   - Security → App passwords → Mail → "The Undertow"
+   - **Copy the 16-character password** (remove spaces)
 
-3. **Note your Gmail address** - this will be your `FROM_EMAIL` and `SMTP_USERNAME`
+3. **Note your Gmail address** - use for `SMTP_USERNAME` and `FROM_EMAIL`
+
+#### Option B: Microsoft O365 (FREE if you have account)
+
+1. **Enable 2-Factor Authentication**:
+   - Go to [account.microsoft.com](https://account.microsoft.com)
+   - Security → Advanced security → Enable 2-step verification
+
+2. **Generate App Password**:
+   - Security → Advanced security → App passwords
+   - Create new → Name "The Undertow"
+   - **Copy the password**
+
+3. **Note your O365 email** - use for `SMTP_USERNAME` and `FROM_EMAIL`
+
+#### Option C: Postmark (PAID - $15/month for 10,000 emails)
+
+1. Sign up at [postmarkapp.com](https://postmarkapp.com)
+2. Create a server → Copy **Server API Token**
+3. Verify your sender email
+
+**See [`EMAIL_SETUP.md`](EMAIL_SETUP.md) for detailed instructions for all options.**
 
 ---
 
@@ -118,13 +135,25 @@ Paste this (replace the values in CAPS with your actual keys):
 # AI Provider
 ANTHROPIC_API_KEY=YOUR_ANTHROPIC_KEY_HERE
 
-# Email (Gmail SMTP - FREE)
+# Email Provider (choose: "smtp" for Gmail/O365, or "postmark")
+EMAIL_PROVIDER=smtp
+
+# For Gmail/O365 SMTP:
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USERNAME=your-email@gmail.com
-SMTP_PASSWORD=your-16-char-app-password
+SMTP_PASSWORD=your-app-password
 SMTP_USE_TLS=true
 FROM_EMAIL=your-email@gmail.com
+
+# For O365, use:
+# SMTP_HOST=smtp.office365.com
+# SMTP_USERNAME=your-email@yourdomain.com
+
+# For Postmark (alternative):
+# EMAIL_PROVIDER=postmark
+# POSTMARK_API_KEY=your-server-token
+
 NEWSLETTER_RECIPIENTS=recipient1@email.com,recipient2@email.com
 
 # Database (don't change these)

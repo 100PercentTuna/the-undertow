@@ -29,11 +29,23 @@
 3. Add $15 credit (Settings → Billing)
 4. Save the key (starts with `sk-ant-...`)
 
-**Gmail** (for email - FREE):
-1. Go to [myaccount.google.com](https://myaccount.google.com)
-2. Enable 2-Factor Authentication (Security → 2-Step Verification)
-3. Generate App Password (Security → App passwords → Mail → "The Undertow")
-4. Save the 16-character password (remove spaces)
+**Email Provider** (choose one):
+
+**Gmail** (FREE - recommended):
+1. [myaccount.google.com](https://myaccount.google.com) → Security → 2-Step Verification
+2. App passwords → Mail → "The Undertow"
+3. Save 16-character password
+
+**O365** (FREE if you have account):
+1. [account.microsoft.com](https://account.microsoft.com) → Security
+2. App passwords → Create → "The Undertow"
+3. Save password
+
+**Postmark** (PAID - $15/month):
+1. [postmarkapp.com](https://postmarkapp.com) → Sign up
+2. Create server → Copy Server API Token
+
+See [`EMAIL_SETUP.md`](EMAIL_SETUP.md) for details.
 
 ### Step 2: Launch Server (5 min)
 
@@ -65,9 +77,9 @@ pip install -r requirements.txt
 cp env.example .env
 nano .env
 # → Add your ANTHROPIC_API_KEY
-# → Add your SMTP_USERNAME (Gmail address)
-# → Add your SMTP_PASSWORD (16-char App Password)
-# → Add your FROM_EMAIL (same as SMTP_USERNAME)
+# → Set EMAIL_PROVIDER (smtp or postmark)
+# → If SMTP: Add SMTP_USERNAME, SMTP_PASSWORD, FROM_EMAIL
+# → If Postmark: Add POSTMARK_API_KEY
 # → Add your NEWSLETTER_RECIPIENTS
 # → Save: Ctrl+X, Y, Enter
 

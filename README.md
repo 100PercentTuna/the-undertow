@@ -25,7 +25,7 @@ Every day at **4:30 AM Singapore Time**, The Undertow:
 |------|---------|
 | AWS Lightsail (Singapore) | $10 |
 | Anthropic API (~$0.30/day) | ~$10 |
-| Gmail SMTP (email) | Free (500/day limit) |
+| Email (Gmail/O365/Postmark) | Free - $15/mo |
 | **Total** | **~$20/month** |
 
 ---
@@ -36,7 +36,7 @@ Every day at **4:30 AM Singapore Time**, The Undertow:
 
 - AWS Account
 - Anthropic API Key ([get one here](https://console.anthropic.com))
-- Gmail Account (free - for sending emails)
+- Email Provider: Gmail (free), O365 (free with account), or Postmark ($15/mo)
 
 ### 5-Minute Setup
 
@@ -113,19 +113,28 @@ Copy `env.example` to `.env` and fill in:
 # Required
 ANTHROPIC_API_KEY=sk-ant-your-key-here
 
-# Gmail SMTP (FREE - 500 emails/day)
-SMTP_HOST=smtp.gmail.com
+# Email Provider (choose one)
+EMAIL_PROVIDER=smtp  # or "postmark"
+
+# For SMTP (Gmail or O365):
+SMTP_HOST=smtp.gmail.com  # or smtp.office365.com
 SMTP_PORT=587
 SMTP_USERNAME=your-email@gmail.com
-SMTP_PASSWORD=your-16-char-app-password
+SMTP_PASSWORD=your-app-password
 SMTP_USE_TLS=true
 FROM_EMAIL=your-email@gmail.com
+
+# For Postmark (alternative):
+# POSTMARK_API_KEY=your-server-token
+
 NEWSLETTER_RECIPIENTS=you@email.com,friend@email.com
 
 # Optional
 DAILY_BUDGET=1.50
 PIPELINE_START_HOUR=20  # 8:30 PM UTC = 4:30 AM SGT
 ```
+
+**See [`EMAIL_SETUP.md`](EMAIL_SETUP.md) for detailed email provider setup.**
 
 ---
 

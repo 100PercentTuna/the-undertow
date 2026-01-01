@@ -113,12 +113,18 @@ class Settings(BaseSettings):
     )
 
     # =========================================================================
-    # Email & Notifications (SMTP - Gmail or any SMTP server)
+    # Email & Notifications
     # =========================================================================
-    # SMTP Configuration (for Gmail: smtp.gmail.com, port 587)
+    # Email Provider: "smtp" (Gmail/O365) or "postmark" (Postmark API)
+    email_provider: str = Field(
+        default="smtp",
+        description="Email provider: 'smtp' (Gmail/O365) or 'postmark'",
+    )
+    
+    # SMTP Configuration (for Gmail/O365/any SMTP server)
     smtp_host: str = Field(
         default="smtp.gmail.com",
-        description="SMTP server hostname",
+        description="SMTP server hostname (Gmail: smtp.gmail.com, O365: smtp.office365.com)",
     )
     smtp_port: int = Field(
         default=587,
@@ -128,15 +134,25 @@ class Settings(BaseSettings):
     )
     smtp_username: str = Field(
         default="",
-        description="SMTP username (your Gmail address)",
+        description="SMTP username (your email address)",
     )
     smtp_password: str = Field(
         default="",
-        description="SMTP password (Gmail App Password, not regular password)",
+        description="SMTP password (App Password for Gmail/O365, not regular password)",
     )
     smtp_use_tls: bool = Field(
         default=True,
         description="Use TLS encryption (True for port 587, False for port 465 with SSL)",
+    )
+    
+    # Postmark Configuration (alternative to SMTP)
+    postmark_api_key: str = Field(
+        default="",
+        description="Postmark API key (if using Postmark instead of SMTP)",
+    )
+    postmark_server_token: str = Field(
+        default="",
+        description="Postmark server token (same as API key, for clarity)",
     )
     from_email: str = Field(
         default="",

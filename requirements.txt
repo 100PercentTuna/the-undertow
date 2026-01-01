@@ -22,7 +22,7 @@ httpx==0.26.0
 feedparser==6.0.10
 beautifulsoup4==4.12.2
 
-# Email (SMTP - free with Gmail)
+# Email (SMTP - Gmail/O365, or Postmark API)
 aiosmtplib==3.0.1
 
 # Utilities

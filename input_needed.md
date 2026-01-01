@@ -10,10 +10,11 @@ This file tracks information needed from the user to complete the implementation
 - [ ] **Anthropic API Key** - Required for Claude models (~$10-15/month)
   - Get from: https://console.anthropic.com
   - Set as `ANTHROPIC_API_KEY` in `.env`
-- [ ] **Gmail App Password** - Required for sending emails (FREE)
-  - Enable 2FA on Gmail: https://myaccount.google.com
-  - Generate App Password: Security → App passwords → Mail → "The Undertow"
-  - Set as `SMTP_PASSWORD` in `.env` (16 characters, no spaces)
+- [ ] **Email Provider Setup** - Choose one:
+  - **Gmail**: Enable 2FA → Generate App Password → Set `SMTP_PASSWORD`
+  - **O365**: Enable 2FA → Generate App Password → Set `SMTP_PASSWORD`
+  - **Postmark**: Sign up → Create server → Copy API token → Set `POSTMARK_API_KEY`
+  - See [`EMAIL_SETUP.md`](EMAIL_SETUP.md) for details
 
 ### 2. Newsletter Recipients
 - [ ] **Email addresses** - Who should receive the newsletter?

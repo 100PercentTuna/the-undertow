@@ -1,7 +1,9 @@
 """
 Simple newsletter service for The Undertow.
 
-Sends daily newsletter via SMTP (Gmail or any SMTP server).
+Supports multiple email providers:
+- SMTP (Gmail, Microsoft O365, or any SMTP server)
+- Postmark API (transactional email service)
 """
 
 import structlog
@@ -11,6 +13,7 @@ from email.mime.text import MIMEText
 from typing import Any
 
 import aiosmtplib
+import httpx
 
 from undertow.config import get_settings
 from undertow.schemas.articles import Article
@@ -22,8 +25,9 @@ class NewsletterService:
     """
     Simple newsletter service.
     
-    Sends HTML emails via SMTP (Gmail or any SMTP server).
-    Free to use with Gmail (500 emails/day limit).
+    Supports multiple email providers:
+    - SMTP: Gmail (500/day free), Microsoft O365 (unlimited with account)
+    - Postmark: 100 emails/month free, $15/month for 10,000
     """
     
     def __init__(self) -> None:
@@ -48,9 +52,15 @@ class NewsletterService:
             logger.warning("no_recipients_configured")
             return False
         
-        if not self._settings.smtp_host:
-            logger.error("smtp_not_configured")
-            return False
+        # Check provider configuration
+        if self._settings.email_provider == "postmark":
+            if not self._settings.postmark_api_key:
+                logger.error("postmark_not_configured")
+                return False
+        else:  # SMTP
+            if not self._settings.smtp_host:
+                logger.error("smtp_not_configured")
+                return False
         
         # Build newsletter HTML
         html = self._build_html(articles)
@@ -60,12 +70,20 @@ class NewsletterService:
         success_count = 0
         for recipient in recipients:
             try:
-                await self._send_email(
-                    to_email=recipient,
-                    subject=self._get_subject(),
-                    html_content=html,
-                    text_content=text,
-                )
+                if self._settings.email_provider == "postmark":
+                    await self._send_via_postmark(
+                        to_email=recipient,
+                        subject=self._get_subject(),
+                        html_content=html,
+                        text_content=text,
+                    )
+                else:
+                    await self._send_via_smtp(
+                        to_email=recipient,
+                        subject=self._get_subject(),
+                        html_content=html,
+                        text_content=text,
+                    )
                 success_count += 1
             except Exception as e:
                 logger.error("email_send_failed", recipient=recipient, error=str(e))
@@ -79,14 +97,14 @@ class NewsletterService:
         
         return success_count > 0
     
-    async def _send_email(
+    async def _send_via_smtp(
         self,
         to_email: str,
         subject: str,
         html_content: str,
         text_content: str,
     ) -> None:
-        """Send a single email via SMTP."""
+        """Send a single email via SMTP (Gmail, O365, or any SMTP server)."""
         # Create message
         message = MIMEMultipart("alternative")
         message["Subject"] = subject
@@ -110,6 +128,41 @@ class NewsletterService:
             use_tls=self._settings.smtp_use_tls,
             start_tls=not self._settings.smtp_use_tls,  # Use STARTTLS if not using TLS
         )
+    
+    async def _send_via_postmark(
+        self,
+        to_email: str,
+        subject: str,
+        html_content: str,
+        text_content: str,
+    ) -> None:
+        """Send a single email via Postmark API."""
+        api_key = self._settings.postmark_api_key or self._settings.postmark_server_token
+        
+        if not api_key:
+            raise ValueError("Postmark API key not configured")
+        
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                "https://api.postmarkapp.com/email",
+                headers={
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "X-Postmark-Server-Token": api_key,
+                },
+                json={
+                    "From": f"The Undertow <{self._settings.from_email}>",
+                    "To": to_email,
+                    "Subject": subject,
+                    "HtmlBody": html_content,
+                    "TextBody": text_content,
+                    "MessageStream": "outbound",
+                },
+            )
+            
+            if response.status_code >= 400:
+                error_data = response.json() if response.headers.get("content-type", "").startswith("application/json") else {}
+                raise Exception(f"Postmark error {response.status_code}: {error_data.get('Message', response.text)}")
     
     def _get_subject(self) -> str:
         """Generate email subject."""
