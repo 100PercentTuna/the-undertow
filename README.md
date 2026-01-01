@@ -55,6 +55,8 @@ Every day at **4:30 AM Singapore Time**, The Undertow:
 
 **Full instructions**: See [`QUICK_START.md`](QUICK_START.md) or [`DEPLOYMENT_GUIDE.md`](DEPLOYMENT_GUIDE.md)
 
+**Setting up GitHub?** See [`GITHUB_SETUP.md`](GITHUB_SETUP.md)
+
 ---
 
 ## 📁 Project Structure
