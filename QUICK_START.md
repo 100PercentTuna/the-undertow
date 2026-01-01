@@ -31,19 +31,17 @@
 
 **Email Provider** (choose one):
 
-**Gmail** (FREE - recommended):
-1. [myaccount.google.com](https://myaccount.google.com) → Security → 2-Step Verification
-2. App passwords → Mail → "The Undertow"
-3. Save 16-character password
-
-**O365** (FREE if you have account):
-1. [account.microsoft.com](https://account.microsoft.com) → Security
-2. App passwords → Create → "The Undertow"
-3. Save password
-
-**Postmark** (PAID - $15/month):
+**Postmark** (RECOMMENDED - $15/month for 10,000 emails):
 1. [postmarkapp.com](https://postmarkapp.com) → Sign up
 2. Create server → Copy Server API Token
+3. Verify sender email
+
+**SendGrid** (FREE - 100 emails/day):
+1. [sendgrid.com](https://sendgrid.com) → Sign up
+2. Verify sender email
+3. Create API key → Copy key (starts with SG.)
+
+**⚠️ Note**: Gmail/O365 app passwords are no longer available. Use Postmark or SendGrid.
 
 See [`EMAIL_SETUP.md`](EMAIL_SETUP.md) for details.
 
@@ -91,9 +89,10 @@ pip install -r requirements.txt
 cp env.example .env
 nano .env
 # → Add your ANTHROPIC_API_KEY
-# → Set EMAIL_PROVIDER (smtp or postmark)
-# → If SMTP: Add SMTP_USERNAME, SMTP_PASSWORD, FROM_EMAIL
+# → Set EMAIL_PROVIDER (postmark or sendgrid)
 # → If Postmark: Add POSTMARK_API_KEY
+# → If SendGrid: Add SENDGRID_API_KEY
+# → Add FROM_EMAIL (verified sender)
 # → Add your NEWSLETTER_RECIPIENTS
 # → Save: Ctrl+X, Y, Enter
 

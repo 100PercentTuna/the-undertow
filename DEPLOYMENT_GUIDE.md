@@ -45,38 +45,21 @@ This guide will help you deploy The Undertow on **AWS or Azure**. It will run au
 
 You have three options. **Gmail is recommended** (free, easy setup).
 
-#### Option A: Gmail (FREE - Recommended)
-
-1. **Enable 2-Factor Authentication**:
-   - Go to [myaccount.google.com](https://myaccount.google.com)
-   - Security → 2-Step Verification → Enable
-
-2. **Generate App Password**:
-   - Security → App passwords → Mail → "The Undertow"
-   - **Copy the 16-character password** (remove spaces)
-
-3. **Note your Gmail address** - use for `SMTP_USERNAME` and `FROM_EMAIL`
-
-#### Option B: Microsoft O365 (FREE if you have account)
-
-1. **Enable 2-Factor Authentication**:
-   - Go to [account.microsoft.com](https://account.microsoft.com)
-   - Security → Advanced security → Enable 2-step verification
-
-2. **Generate App Password**:
-   - Security → Advanced security → App passwords
-   - Create new → Name "The Undertow"
-   - **Copy the password**
-
-3. **Note your O365 email** - use for `SMTP_USERNAME` and `FROM_EMAIL`
-
-#### Option C: Postmark (PAID - $15/month for 10,000 emails)
+#### Option A: Postmark (RECOMMENDED - $15/month for 10,000 emails)
 
 1. Sign up at [postmarkapp.com](https://postmarkapp.com)
 2. Create a server → Copy **Server API Token**
 3. Verify your sender email
 
-**See [`EMAIL_SETUP.md`](EMAIL_SETUP.md) for detailed instructions for all options.**
+#### Option B: SendGrid (FREE - 100 emails/day)
+
+1. Sign up at [sendgrid.com](https://sendgrid.com)
+2. Verify sender email
+3. Create API key → Copy key (starts with `SG.`)
+
+**⚠️ Note**: Gmail and O365 app passwords are no longer available. Use Postmark or SendGrid instead.
+
+**See [`EMAIL_SETUP.md`](EMAIL_SETUP.md) for detailed instructions.**
 
 ---
 

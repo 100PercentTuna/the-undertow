@@ -2,8 +2,9 @@
 Simple newsletter service for The Undertow.
 
 Supports multiple email providers:
-- SMTP (Gmail, Microsoft O365, or any SMTP server)
-- Postmark API (transactional email service)
+- Postmark API (recommended - $15/mo for 10,000 emails)
+- SendGrid API (free tier - 100 emails/day)
+- SMTP with OAuth2 (advanced - not recommended)
 """
 
 import structlog
@@ -26,8 +27,9 @@ class NewsletterService:
     Simple newsletter service.
     
     Supports multiple email providers:
-    - SMTP: Gmail (500/day free), Microsoft O365 (unlimited with account)
-    - Postmark: 100 emails/month free, $15/month for 10,000
+    - Postmark: Recommended - $15/month for 10,000 emails
+    - SendGrid: Free tier - 100 emails/day
+    - SMTP: OAuth2 only (advanced, not recommended)
     """
     
     def __init__(self) -> None:
@@ -54,10 +56,14 @@ class NewsletterService:
         
         # Check provider configuration
         if self._settings.email_provider == "postmark":
-            if not self._settings.postmark_api_key:
+            if not (self._settings.postmark_api_key or self._settings.postmark_server_token):
                 logger.error("postmark_not_configured")
                 return False
-        else:  # SMTP
+        elif self._settings.email_provider == "sendgrid":
+            if not self._settings.sendgrid_api_key:
+                logger.error("sendgrid_not_configured")
+                return False
+        else:  # SMTP (OAuth2 - not recommended)
             if not self._settings.smtp_host:
                 logger.error("smtp_not_configured")
                 return False
@@ -77,7 +83,14 @@ class NewsletterService:
                         html_content=html,
                         text_content=text,
                     )
-                else:
+                elif self._settings.email_provider == "sendgrid":
+                    await self._send_via_sendgrid(
+                        to_email=recipient,
+                        subject=self._get_subject(),
+                        html_content=html,
+                        text_content=text,
+                    )
+                else:  # SMTP (OAuth2 - not recommended)
                     await self._send_via_smtp(
                         to_email=recipient,
                         subject=self._get_subject(),
@@ -163,6 +176,42 @@ class NewsletterService:
             if response.status_code >= 400:
                 error_data = response.json() if response.headers.get("content-type", "").startswith("application/json") else {}
                 raise Exception(f"Postmark error {response.status_code}: {error_data.get('Message', response.text)}")
+    
+    async def _send_via_sendgrid(
+        self,
+        to_email: str,
+        subject: str,
+        html_content: str,
+        text_content: str,
+    ) -> None:
+        """Send a single email via SendGrid API."""
+        if not self._settings.sendgrid_api_key:
+            raise ValueError("SendGrid API key not configured")
+        
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                "https://api.sendgrid.com/v3/mail/send",
+                headers={
+                    "Authorization": f"Bearer {self._settings.sendgrid_api_key}",
+                    "Content-Type": "application/json",
+                },
+                json={
+                    "personalizations": [{"to": [{"email": to_email}]}],
+                    "from": {
+                        "email": self._settings.from_email,
+                        "name": "The Undertow",
+                    },
+                    "subject": subject,
+                    "content": [
+                        {"type": "text/plain", "value": text_content},
+                        {"type": "text/html", "value": html_content},
+                    ],
+                },
+            )
+            
+            if response.status_code >= 400:
+                error_data = response.json() if response.headers.get("content-type", "").startswith("application/json") else {}
+                raise Exception(f"SendGrid error {response.status_code}: {error_data.get('errors', response.text)}")
     
     def _get_subject(self) -> str:
         """Generate email subject."""

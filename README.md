@@ -25,7 +25,7 @@ Every day at **4:30 AM Singapore Time**, The Undertow:
 |------|---------|
 | Cloud Server (AWS/Azure) | $7-15 |
 | Anthropic API (~$0.30/day) | ~$10 |
-| Email (Gmail/O365/Postmark) | Free - $15/mo |
+| Email (Postmark/SendGrid) | Free - $15/mo |
 | **Total** | **~$17-40/month** |
 
 **AWS**: $10/month (2 GB RAM) | **Azure**: $7-15/month (1-4 GB RAM)
@@ -38,7 +38,7 @@ Every day at **4:30 AM Singapore Time**, The Undertow:
 
 - Cloud Account: AWS or Azure
 - Anthropic API Key ([get one here](https://console.anthropic.com))
-- Email Provider: Gmail (free), O365 (free with account), or Postmark ($15/mo)
+- Email Provider: Postmark ($15/mo) or SendGrid (free - 100/day)
 
 ### 5-Minute Setup
 
@@ -120,18 +120,16 @@ Copy `env.example` to `.env` and fill in:
 ANTHROPIC_API_KEY=sk-ant-your-key-here
 
 # Email Provider (choose one)
-EMAIL_PROVIDER=smtp  # or "postmark"
+EMAIL_PROVIDER=postmark  # or "sendgrid"
 
-# For SMTP (Gmail or O365):
-SMTP_HOST=smtp.gmail.com  # or smtp.office365.com
-SMTP_PORT=587
-SMTP_USERNAME=your-email@gmail.com
-SMTP_PASSWORD=your-app-password
-SMTP_USE_TLS=true
-FROM_EMAIL=your-email@gmail.com
+# For Postmark (recommended):
+POSTMARK_API_KEY=your-server-token
+FROM_EMAIL=your-verified-email@domain.com
 
-# For Postmark (alternative):
-# POSTMARK_API_KEY=your-server-token
+# For SendGrid (free tier):
+# EMAIL_PROVIDER=sendgrid
+# SENDGRID_API_KEY=SG.your-key-here
+# FROM_EMAIL=your-verified-email@domain.com
 
 NEWSLETTER_RECIPIENTS=you@email.com,friend@email.com
 

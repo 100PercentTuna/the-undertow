@@ -115,10 +115,10 @@ class Settings(BaseSettings):
     # =========================================================================
     # Email & Notifications
     # =========================================================================
-    # Email Provider: "smtp" (Gmail/O365) or "postmark" (Postmark API)
+    # Email Provider: "postmark", "sendgrid", or "smtp" (OAuth2 only - not recommended)
     email_provider: str = Field(
-        default="smtp",
-        description="Email provider: 'smtp' (Gmail/O365) or 'postmark'",
+        default="postmark",
+        description="Email provider: 'postmark' (recommended), 'sendgrid' (free tier), or 'smtp' (OAuth2 - advanced)",
     )
     
     # SMTP Configuration (for Gmail/O365/any SMTP server)
@@ -138,21 +138,27 @@ class Settings(BaseSettings):
     )
     smtp_password: str = Field(
         default="",
-        description="SMTP password (App Password for Gmail/O365, not regular password)",
+        description="SMTP password (OAuth2 token for Gmail/O365 - not recommended, use Postmark/SendGrid instead)",
     )
     smtp_use_tls: bool = Field(
         default=True,
         description="Use TLS encryption (True for port 587, False for port 465 with SSL)",
     )
     
-    # Postmark Configuration (alternative to SMTP)
+    # Postmark Configuration (recommended)
     postmark_api_key: str = Field(
         default="",
-        description="Postmark API key (if using Postmark instead of SMTP)",
+        description="Postmark API key (Server Token)",
     )
     postmark_server_token: str = Field(
         default="",
         description="Postmark server token (same as API key, for clarity)",
+    )
+    
+    # SendGrid Configuration (free tier alternative)
+    sendgrid_api_key: str = Field(
+        default="",
+        description="SendGrid API key (if using SendGrid instead of Postmark)",
     )
     from_email: str = Field(
         default="",

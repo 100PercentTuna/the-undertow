@@ -1,77 +1,16 @@
 # Email Provider Setup Guide
 
-The Undertow supports three email providers. Choose the one that works best for you.
+The Undertow supports multiple email providers. **⚠️ App passwords for Gmail and O365 are no longer available** - use Postmark or SendGrid instead.
 
 ---
 
-## Option 1: Gmail SMTP (FREE - Recommended)
+## ⚠️ Important: Gmail & O365 App Passwords Deprecated
 
-**Best for**: Personal use, testing  
-**Cost**: Free  
-**Limit**: 500 emails/day  
-**Setup time**: 5 minutes
-
-### Setup Steps
-
-1. **Enable 2-Factor Authentication**
-   - Go to [myaccount.google.com](https://myaccount.google.com)
-   - Security → 2-Step Verification → Enable
-
-2. **Generate App Password**
-   - Security → App passwords
-   - Select "Mail" and "Other (Custom name)"
-   - Type "The Undertow"
-   - **Copy the 16-character password** (remove spaces)
-
-3. **Configure `.env`**
-   ```bash
-   EMAIL_PROVIDER=smtp
-   SMTP_HOST=smtp.gmail.com
-   SMTP_PORT=587
-   SMTP_USERNAME=your-email@gmail.com
-   SMTP_PASSWORD=your16charapppassword
-   SMTP_USE_TLS=true
-   FROM_EMAIL=your-email@gmail.com
-   ```
+**As of 2025, both Gmail and Microsoft O365 have deprecated app passwords** in favor of OAuth 2.0. For automated systems like The Undertow, **Postmark or SendGrid are recommended** instead.
 
 ---
 
-## Option 2: Microsoft O365 SMTP (FREE)
-
-**Best for**: Business/enterprise accounts  
-**Cost**: Free (if you have O365 account)  
-**Limit**: Unlimited (within your plan)  
-**Setup time**: 5 minutes
-
-### Setup Steps
-
-1. **Enable 2-Factor Authentication**
-   - Go to [account.microsoft.com](https://account.microsoft.com)
-   - Security → Advanced security options
-   - Enable 2-step verification
-
-2. **Generate App Password**
-   - Security → Advanced security → App passwords
-   - Create new app password
-   - Name it "The Undertow"
-   - **Copy the password** (16 characters)
-
-3. **Configure `.env`**
-   ```bash
-   EMAIL_PROVIDER=smtp
-   SMTP_HOST=smtp.office365.com
-   SMTP_PORT=587
-   SMTP_USERNAME=your-email@yourdomain.com
-   SMTP_PASSWORD=your-app-password
-   SMTP_USE_TLS=true
-   FROM_EMAIL=your-email@yourdomain.com
-   ```
-
-**Note**: Your `SMTP_USERNAME` should be your full O365 email address (e.g., `name@company.com`).
-
----
-
-## Option 3: Postmark (PAID - Best for Production)
+## Option 1: Postmark (RECOMMENDED - Best for Production)
 
 **Best for**: Production, high deliverability  
 **Cost**: 
@@ -114,15 +53,66 @@ The Undertow supports three email providers. Choose the one that works best for 
 
 ---
 
+## Option 2: SendGrid (FREE TIER - Good Alternative)
+
+**Best for**: Free tier users, testing  
+**Cost**: 
+- Free: 100 emails/day forever
+- Paid: $19.95/month for 50,000 emails  
+**Limit**: 100/day on free tier  
+**Setup time**: 10 minutes
+
+### Setup Steps
+
+1. **Sign Up**
+   - Go to [sendgrid.com](https://sendgrid.com)
+   - Click "Start for Free"
+   - Create account
+
+2. **Verify Sender**
+   - Settings → Sender Authentication
+   - Click "Verify a Single Sender"
+   - Enter your email and verify
+
+3. **Create API Key**
+   - Settings → API Keys
+   - Click "Create API Key"
+   - Name it "undertow"
+   - Select "Full Access" or "Mail Send" permissions
+   - **Copy the API key** (starts with `SG.`)
+
+4. **Configure `.env`**
+   ```bash
+   EMAIL_PROVIDER=sendgrid
+   SENDGRID_API_KEY=SG.your-key-here
+   FROM_EMAIL=your-verified-email@domain.com
+   NEWSLETTER_RECIPIENTS=you@email.com,friend@email.com
+   ```
+
+---
+
+## Option 3: Gmail/O365 with OAuth 2.0 (ADVANCED - Not Recommended)
+
+**Note**: This requires OAuth 2.0 setup which is complex. **Not recommended** unless you're comfortable with OAuth flows.
+
+If you need Gmail/O365, you'll need to:
+1. Register an OAuth 2.0 application
+2. Implement OAuth flow to get access tokens
+3. Use tokens for SMTP authentication
+
+**Recommendation**: Use Postmark or SendGrid instead - they're simpler and more reliable for automated systems.
+
+---
+
 ## Comparison
 
 | Provider | Cost | Daily Limit | Setup Difficulty | Best For |
 |----------|------|-------------|------------------|----------|
-| **Gmail** | Free | 500/day | Easy | Personal, testing |
-| **O365** | Free* | Unlimited* | Easy | Business accounts |
 | **Postmark** | $15/mo | 10,000/mo | Medium | Production, scale |
+| **SendGrid** | Free | 100/day | Easy | Free tier, testing |
+| **Gmail/O365** | Free* | N/A | Complex | Not recommended |
 
-*Free if you already have an O365 account
+*Requires OAuth 2.0 setup (complex)
 
 ---
 
@@ -142,16 +132,16 @@ This will send a test newsletter to your recipients.
 
 ## Troubleshooting
 
-### Gmail/O365: "Authentication failed"
-- Make sure you're using an **App Password**, not your regular password
-- Verify 2FA is enabled
-- Check that `SMTP_USERNAME` matches `FROM_EMAIL`
-
 ### Postmark: "Invalid API token"
 - Verify you copied the **Server API Token**, not the Account API token
 - Check that your sender email is verified in Postmark
 
-### "Connection refused"
+### SendGrid: "Authentication failed"
+- Verify you copied the full API key (starts with `SG.`)
+- Check that your sender email is verified in SendGrid
+- Ensure API key has "Mail Send" permissions
+
+### "Connection refused" (SMTP only)
 - Check firewall settings
 - Verify SMTP host and port are correct
 - For O365, ensure your organization allows SMTP
@@ -162,3 +152,17 @@ This will send a test newsletter to your recipients.
 
 To switch providers, just change `EMAIL_PROVIDER` in `.env` and update the relevant credentials. No code changes needed!
 
+---
+
+## Why Not Gmail/O365 App Passwords?
+
+Both Google and Microsoft have deprecated app passwords in favor of OAuth 2.0 for security reasons:
+
+- **Gmail**: As of March 2025, OAuth 2.0 is required for third-party apps
+- **O365**: App passwords are being phased out, especially for accounts with MFA
+
+For automated systems like The Undertow, using a transactional email service (Postmark/SendGrid) is:
+- ✅ Simpler to set up
+- ✅ More reliable
+- ✅ Better deliverability
+- ✅ Designed for automated sending
