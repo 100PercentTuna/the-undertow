@@ -14,7 +14,8 @@ A fully automated geopolitical intelligence system that produces a daily newslet
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    AWS Lightsail ($10/mo)                   │
+│         Cloud Server (AWS Lightsail or Azure VM)            │
+│              AWS: $10/mo | Azure: $7-15/mo                  │
 │                                                             │
 │  ┌─────────────┐    ┌──────────────┐    ┌──────────────┐   │
 │  │   Python    │    │  PostgreSQL  │    │    Redis     │   │
@@ -33,7 +34,7 @@ A fully automated geopolitical intelligence system that produces a daily newslet
 │  ┌─────────────────────────────────────────────────────┐   │
 │  │              External Services                        │   │
 │  │  • Anthropic API (Claude Haiku) - ~$0.90/day         │   │
-│  │  • Gmail SMTP (email) - Free (500/day)               │   │
+│  │  • Email (SMTP/Postmark) - Free - $15/mo            │   │
 │  └─────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────┘
 ```

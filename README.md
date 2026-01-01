@@ -23,10 +23,12 @@ Every day at **4:30 AM Singapore Time**, The Undertow:
 
 | Item | Monthly |
 |------|---------|
-| AWS Lightsail (Singapore) | $10 |
+| Cloud Server (AWS/Azure) | $7-15 |
 | Anthropic API (~$0.30/day) | ~$10 |
 | Email (Gmail/O365/Postmark) | Free - $15/mo |
-| **Total** | **~$20/month** |
+| **Total** | **~$17-40/month** |
+
+**AWS**: $10/month (2 GB RAM) | **Azure**: $7-15/month (1-4 GB RAM)
 
 ---
 
@@ -34,7 +36,7 @@ Every day at **4:30 AM Singapore Time**, The Undertow:
 
 ### Prerequisites
 
-- AWS Account
+- Cloud Account: AWS or Azure
 - Anthropic API Key ([get one here](https://console.anthropic.com))
 - Email Provider: Gmail (free), O365 (free with account), or Postmark ($15/mo)
 
@@ -44,16 +46,20 @@ Every day at **4:30 AM Singapore Time**, The Undertow:
    - Anthropic: Sign up → API Keys → Create → Add $15 credit
    - SendGrid: Sign up → API Keys → Create → Verify sender email
 
-2. **Launch AWS Server** (5 min)
-   - AWS Console → Lightsail → Create Instance
-   - Choose: **Singapore**, **Ubuntu 22.04**, **$10/month**
+2. **Launch Cloud Server** (5 min)
+   - **AWS**: Lightsail → Create Instance → Singapore, Ubuntu 22.04, $10/month
+   - **Azure**: Virtual Machine → Southeast Asia, Ubuntu 22.04, B1s ($7/mo)
    - Name: "undertow"
 
 3. **Install & Configure** (15 min)
    - Click "Connect" on your instance
    - Follow commands in [`DEPLOYMENT_GUIDE.md`](DEPLOYMENT_GUIDE.md)
 
-**Full instructions**: See [`QUICK_START.md`](QUICK_START.md) or [`DEPLOYMENT_GUIDE.md`](DEPLOYMENT_GUIDE.md)
+**Full instructions**: 
+- AWS: [`DEPLOYMENT_GUIDE.md`](DEPLOYMENT_GUIDE.md)
+- Azure: [`AZURE_DEPLOYMENT.md`](AZURE_DEPLOYMENT.md)
+- Quick: [`QUICK_START.md`](QUICK_START.md)
+- **Which cloud?** See [`CLOUD_COMPARISON.md`](CLOUD_COMPARISON.md)
 
 **Setting up GitHub?** See [`GITHUB_SETUP.md`](GITHUB_SETUP.md)
 

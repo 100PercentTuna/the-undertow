@@ -49,14 +49,28 @@ See [`EMAIL_SETUP.md`](EMAIL_SETUP.md) for details.
 
 ### Step 2: Launch Server (5 min)
 
+**Choose AWS or Azure:**
+
+**AWS** (Recommended):
 1. Log into AWS → Search "Lightsail" → Create Instance
 2. Choose: **Singapore**, **Ubuntu 22.04**, **$10/month**
 3. Name it "undertow" → Create
 4. Wait 2 minutes
 
+**Azure** (Alternative):
+1. Log into Azure Portal → Create resource → Virtual Machine
+2. Choose: **Southeast Asia**, **Ubuntu 22.04**, **B1s ($7/mo)** or **B1ms ($15/mo)**
+3. Name it "undertow" → Create
+4. Wait 2 minutes
+
+See [`AZURE_DEPLOYMENT.md`](AZURE_DEPLOYMENT.md) for detailed Azure instructions.
+
 ### Step 3: Install & Configure (15 min)
 
-Click "Connect" on your Lightsail instance, then paste these commands:
+**For AWS**: Click "Connect" on your Lightsail instance  
+**For Azure**: SSH to your VM (see [`AZURE_DEPLOYMENT.md`](AZURE_DEPLOYMENT.md))
+
+Then paste these commands:
 
 ```bash
 # One-time setup
@@ -120,10 +134,13 @@ sudo journalctl -u undertow -f
 
 | Item | Monthly |
 |------|---------|
-| AWS Lightsail (Singapore) | $10 |
+| Cloud Server (AWS/Azure) | $7-15 |
 | Anthropic API (~$0.30/day) | ~$10 |
-| Gmail SMTP | Free (500 emails/day) |
-| **Total** | **~$20/month** |
+| Email (Gmail/O365/Postmark) | Free - $15/mo |
+| **Total** | **~$17-40/month** |
+
+**AWS**: $10/month (2 GB RAM)  
+**Azure**: $7-15/month (1-4 GB RAM)
 
 ---
 

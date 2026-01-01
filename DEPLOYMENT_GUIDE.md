@@ -2,15 +2,29 @@
 
 ## Complete Step-by-Step Instructions (No Technical Background Required)
 
-This guide will help you deploy The Undertow on AWS. It will run automatically every day and deliver your newsletter by 4:30 AM Singapore time.
+This guide will help you deploy The Undertow on **AWS or Azure**. It will run automatically every day and deliver your newsletter by 4:30 AM Singapore time.
+
+---
+
+## Choose Your Cloud Provider
+
+**AWS** (Recommended for beginners):
+- Simple Lightsail interface
+- $10/month for 2 GB RAM
+- See [Part 2: Deploy on AWS](#part-2-deploy-on-aws)
+
+**Azure** (Good if you have Microsoft account):
+- $7-10/month for 1 GB RAM
+- $15/month for 4 GB RAM (better performance)
+- See [`AZURE_DEPLOYMENT.md`](AZURE_DEPLOYMENT.md)
 
 ---
 
 ## What You'll Need
 
-1. **An AWS Account** (you have this ✓)
+1. **A Cloud Account** (AWS or Azure)
 2. **An Anthropic API Key** (for AI - costs ~$1/day)
-3. **A Gmail Account** (free - for sending emails)
+3. **Email Provider** (Gmail/O365/Postmark)
 4. **About 30 minutes** to set everything up
 
 ---
@@ -67,6 +81,8 @@ You have three options. **Gmail is recommended** (free, easy setup).
 ---
 
 ## Part 2: Deploy on AWS
+
+> **Using Azure instead?** See [`AZURE_DEPLOYMENT.md`](AZURE_DEPLOYMENT.md) for Azure-specific instructions.
 
 ### Step 2.1: Launch AWS Lightsail Instance
 
