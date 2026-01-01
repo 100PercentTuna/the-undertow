@@ -22,9 +22,14 @@ git remote add origin https://github.com/YOUR_USERNAME/undertow.git
 # Rename branch to main (if needed)
 git branch -M main
 
-# Push to GitHub
+# If the remote has an initial commit (README, etc.), force push:
+git push -u origin main --force
+
+# Otherwise, regular push:
 git push -u origin main
 ```
+
+**Note**: If you see "rejected" errors, it means the remote has content. Use `--force` to overwrite it with your local code.
 
 ## Step 3: Verify
 
